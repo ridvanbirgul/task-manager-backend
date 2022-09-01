@@ -1,4 +1,3 @@
-import { ProjectTable } from '../models/project-contract';
 import { ProjectStatus } from '../models/project-status';
 import { RecordStatus } from '../models/record-status';
 import { TaskContract } from '../models/task-contract';
@@ -7,10 +6,11 @@ import { TaskStatus } from '../models/task-status';
 import { TeammateContract } from '../models/teammate-contract';
 import { TeammateRole } from '../models/teammate-role';
 import '../extensions/date.extensions';
+import { ProjectContract } from '../models/project-contract';
 
 describe('Test of data table classes', () => {
     test('Is_ProjectContract_set_and_get_methods_working_properly', () => {
-        let projectDT = new ProjectTable();
+        let projectDT = new ProjectContract();
         projectDT.ProjectNo = 1;
         projectDT.ProjectName = 'Project For Test';
         projectDT.ProjectStatus = ProjectStatus.Started;
@@ -22,7 +22,7 @@ describe('Test of data table classes', () => {
     });
 
     test('Is_ProjectContract_returns_correct_insert_script', () => {
-        let projectDT = new ProjectTable(1, 'Project For Test', ProjectStatus.New);
+        let projectDT = new ProjectContract(0, 1, 'Project For Test', ProjectStatus.New);
         let expectedValue = 'INSERT INTO Project(ProjectNo,ProjectName,ProjectStatus) VALUES(?,?,?)';
         expect(projectDT.generateInsertStatement()).toEqual(expectedValue);
     });
@@ -40,7 +40,7 @@ describe('Test of data table classes', () => {
     });
 
     test('Is_TeammateContract_returns_correct_insert_script', () => {
-        let teammateDT = new TeammateContract('Rıdvan Birgül', TeammateRole.SeniorDeveloper, RecordStatus.Active);
+        let teammateDT = new TeammateContract(0, 'Rıdvan Birgül', TeammateRole.SeniorDeveloper, RecordStatus.Active);
         let expectedValue = 'INSERT INTO Teammate(TeammateName,TeammateRole,TeammateStatus) VALUES(?,?,?)';
         expect(teammateDT.generateInsertStatement()).toEqual(expectedValue);
     });
@@ -69,6 +69,7 @@ describe('Test of data table classes', () => {
 
     test('Is_TaskContract_returns_correct_insert_script', () => {
         let taskDT = new TaskContract(
+            0,
             123,
             10,
             'Deneme taskıdır',
@@ -83,7 +84,7 @@ describe('Test of data table classes', () => {
     });
 
     test('Is_TaskNoteContract_set_and_get_methods_working_properly', () => {
-        let taskNoteDT = new TaskNoteContract();
+        let taskNoteDT = new TaskNoteContract(0);
         taskNoteDT.TaskId = 153;
         taskNoteDT.TaskDescription = 'Deneme task notu';
 
@@ -93,7 +94,7 @@ describe('Test of data table classes', () => {
     });
 
     test('Is_TaskNoteContract_returns_correct_insert_script', () => {
-        let taskNoteDT = new TaskNoteContract(153, 'Deneme task notu');
+        let taskNoteDT = new TaskNoteContract(0, 153, 'Deneme task notu');
         let expectedValue = 'INSERT INTO TaskNote(TaskId,TaskDescription) VALUES(?,?)';
         expect(taskNoteDT.generateInsertStatement()).toEqual(expectedValue);
     });

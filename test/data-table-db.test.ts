@@ -18,8 +18,8 @@ describe('Test of datacontract CRUD operations', () => {
     });
 
     test('ProjectContract_Insert', async () => {
-        let dt = new ProjectContract(11, 'Deneme Projesi', ProjectStatus.New);
-        dbm.Database.insert(dt)
+        let dt = new ProjectContract(0, 11, 'Deneme Projesi', ProjectStatus.New);
+        dbm.Database.insert<RunResult>(dt)
             .then((result: RunResult) => {
                 expect(result.lastID).toBeGreaterThan(0);
             })
@@ -30,6 +30,7 @@ describe('Test of datacontract CRUD operations', () => {
 
     test('TaskContract_Insert', () => {
         let dt = new TaskContract(
+            0,
             1,
             1,
             'Deneme Task',
@@ -40,7 +41,7 @@ describe('Test of datacontract CRUD operations', () => {
             Date.prototype.getDefaultDate()
         );
 
-        dbm.Database.insert(dt)
+        dbm.Database.insert<RunResult>(dt)
             .then((result: RunResult) => {
                 expect(result.lastID).toBeGreaterThan(0);
             })
@@ -50,8 +51,8 @@ describe('Test of datacontract CRUD operations', () => {
     });
 
     test('TeammateContract_Insert', () => {
-        let dt = new TeammateContract('Rıdvan Birgül', TeammateRole.SeniorDeveloper, RecordStatus.Active);
-        dbm.Database.insert(dt)
+        let dt = new TeammateContract(0, 'Rıdvan Birgül', TeammateRole.SeniorDeveloper, RecordStatus.Active);
+        dbm.Database.insert<RunResult>(dt)
             .then((result: RunResult) => {
                 expect(result.lastID).toBeGreaterThan(0);
             })
@@ -61,8 +62,8 @@ describe('Test of datacontract CRUD operations', () => {
     });
 
     test('TaskNoteContract_Insert', () => {
-        let dt = new TaskNoteContract(1, 'Unit test task');
-        dbm.Database.insert(dt)
+        let dt = new TaskNoteContract(0, 1, 'Unit test task');
+        dbm.Database.insert<RunResult>(dt)
             .then((result: RunResult) => {
                 expect(result.lastID).toBeGreaterThan(0);
             })

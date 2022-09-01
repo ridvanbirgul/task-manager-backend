@@ -56,4 +56,4 @@ function ignoreFavicon(req: any, res: any, next: any) {
     next();
 }
 
-module.exports = app;
+export default app;
