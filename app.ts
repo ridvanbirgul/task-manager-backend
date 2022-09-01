@@ -20,6 +20,7 @@ app.set('view engine', 'jade');
 
 process.env.DATABASE_URL = path.join(__dirname, '/public/assets/taskdb.db');
 
+app.use(ignoreFavicon);
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -47,5 +48,12 @@ app.use(function (err: any, req: any, res: any, next: any) {
     res.status(err.status || 500);
     res.render('error');
 });
+
+function ignoreFavicon(req: any, res: any, next: any) {
+    if (req.originalUrl.includes('favicon.ico')) {
+        res.status(204).end();
+    }
+    next();
+}
 
 module.exports = app;
