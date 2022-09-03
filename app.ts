@@ -9,6 +9,7 @@ import { TeammateRouter } from './routes/teammate';
 import { TaskRouter } from './routes/task';
 import { IndexRouter } from './routes';
 import { TaskNoteRouter } from './routes/task-note';
+import cors from 'cors';
 
 dotenv.config();
 
@@ -58,6 +59,3 @@ function ignoreFavicon(req: any, res: any, next: any) {
 }
 
 export default app;
-function cors(): any {
-    throw new Error('Function not implemented.');
-}
