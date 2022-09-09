@@ -52,9 +52,13 @@ class ProjectManager extends ManagerBase<ProjectContract> {
             Message: '',
             Data: [],
         };
-        await dbm.Database.select<ProjectContract>(`SELECT * FROM Project WHERE ProjectStatus=?`, [
-            this.contract.ProjectStatus,
-        ])
+        let query = `SELECT * FROM Project`;
+        let paramater = [];
+        if (this.contract.ProjectStatus !== ProjectStatus.None) {
+            query = `SELECT * FROM Project WHERE ProjectStatus=?`;
+            paramater.push(this.contract.ProjectStatus);
+        }
+        await dbm.Database.select<ProjectContract>(query, paramater)
             .then((result: Array<ProjectContract>) => {
                 res.Data.push(...result);
             })
