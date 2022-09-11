@@ -28,7 +28,7 @@ router.post('/crud', async (req: Request<{}, {}, ITaskRouterRequest>, res: Respo
     });
 });
 
-router.get('/list', (req: Request<{}, {}, ITaskRouterRequest>, res: Response) => {
+router.post('/list', (req: Request<{}, {}, ITaskRouterRequest>, res: Response) => {
     let tm = new TaskManager(new SqLiteDatabase(), req.body.Task);
     tm.getList().then((result: ApiListResponse<TaskContract>) => {
         res.json(result);

@@ -9,6 +9,7 @@ import { TaskNoteContract } from '../models/task-note-contract';
 import { TaskStatus } from '../models/task-status';
 import { TeammateContract } from '../models/teammate-contract';
 import { TeammateRole } from '../models/teammate-role';
+import DateUtils from '../util/date-utils';
 
 describe('Test of datacontract CRUD operations', () => {
     let dbm: DatabaseManager;
@@ -37,8 +38,8 @@ describe('Test of datacontract CRUD operations', () => {
             TaskStatus.None,
             new Date('2022-09-01'),
             new Date('2022-09-30'),
-            Date.prototype.getDefaultDate(),
-            Date.prototype.getDefaultDate()
+            DateUtils.getDefaultDate(),
+            DateUtils.getDefaultDate()
         );
 
         dbm.Database.insert<RunResult>(dt)

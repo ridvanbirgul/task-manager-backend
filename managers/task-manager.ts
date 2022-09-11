@@ -68,7 +68,7 @@ class TaskManager extends ManagerBase<TaskContract> {
 
         query += ' LIMIT 100 ';
 
-        this.dbm.Database.select<TaskContract>(query, paramList)
+       await this.dbm.Database.select<TaskContract>(query, paramList)
             .then((result: Array<TaskContract>) => {
                 res.Data.push(...result);
             })

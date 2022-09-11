@@ -5,7 +5,7 @@
  */
 
 import app from '../app';
-import http from 'http';
+import http, { IncomingMessage, ServerResponse } from 'http';
 // var app = require('../app');
 // var debug = require('debug')('backend:server');
 // var http = require('http');

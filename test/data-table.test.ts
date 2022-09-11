@@ -7,6 +7,7 @@ import { TeammateContract } from '../models/teammate-contract';
 import { TeammateRole } from '../models/teammate-role';
 import '../extensions/date.extensions';
 import { ProjectContract } from '../models/project-contract';
+import DateUtils from '../util/date-utils';
 
 describe('Test of data table classes', () => {
     test('Is_ProjectContract_set_and_get_methods_working_properly', () => {
@@ -53,8 +54,8 @@ describe('Test of data table classes', () => {
         taskDT.TaskStatus = TaskStatus.Started;
         taskDT.StartDate = new Date('2022-01-01');
         taskDT.EndDate = new Date('2022-12-31');
-        taskDT.ActualStartDate = Date.prototype.getDefaultDate();
-        taskDT.ActualEndDate = Date.prototype.getDefaultDate();
+        taskDT.ActualStartDate = DateUtils.getDefaultDate();
+        taskDT.ActualEndDate = DateUtils.getDefaultDate();
 
         expect(0).toBe(taskDT.TaskId);
         expect(123).toBe(taskDT.ProjectId);
@@ -76,8 +77,8 @@ describe('Test of data table classes', () => {
             TaskStatus.Started,
             new Date('2022-01-01'),
             new Date('2022-12-31'),
-            Date.prototype.getDefaultDate(),
-            Date.prototype.getDefaultDate()
+            DateUtils.getDefaultDate(),
+            DateUtils.getDefaultDate()
         );
         let expectedValue = `INSERT INTO Task(ProjectId,TeammateId,TaskDescription,TaskStatus,StartDate,EndDate,ActualStartDate,ActualEndDate) VALUES(?,?,?,?,?,?,?,?)`;
         expect(taskDT.generateInsertStatement()).toEqual(expectedValue);

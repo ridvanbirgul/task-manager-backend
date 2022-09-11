@@ -1,6 +1,7 @@
 import { IDataTable } from '../dao/table-base';
 import { TaskStatus } from './task-status';
-import '../extensions/date.extensions';
+import '../util/date-utils';
+import DateUtils from '../util/date-utils';
 
 class TaskContract implements IDataTable {
     private taskId: number;
@@ -19,10 +20,10 @@ class TaskContract implements IDataTable {
         teammateId: number = 0,
         taskDescription: string = '',
         taskStatus: TaskStatus = TaskStatus.None,
-        startDate: Date = Date.prototype.getDefaultDate(),
-        endDate: Date = Date.prototype.getDefaultDate(),
-        actualStartDate: Date = Date.prototype.getDefaultDate(),
-        actualEndDate: Date = Date.prototype.getDefaultDate()
+        startDate: Date = DateUtils.getDefaultDate(),
+        endDate: Date = DateUtils.getDefaultDate(),
+        actualStartDate: Date = DateUtils.getDefaultDate(),
+        actualEndDate: Date = DateUtils.getDefaultDate()
     ) {
         this.taskId = taskId;
         this.projectId = projectId;
@@ -98,10 +99,10 @@ class TaskContract implements IDataTable {
             this.teammateId,
             this.taskDescription,
             this.taskStatus,
-            this.startDate.toYYYYMMDDString(),
-            this.endDate.toYYYYMMDDString(),
-            this.actualStartDate.toYYYYMMDDString(),
-            this.actualEndDate.toYYYYMMDDString(),
+            DateUtils.toYYYYMMDDString(this.startDate),
+            DateUtils.toYYYYMMDDString(this.endDate),
+            DateUtils.toYYYYMMDDString(this.actualStartDate),
+            DateUtils.toYYYYMMDDString(this.actualEndDate),
         ];
     }
 }
