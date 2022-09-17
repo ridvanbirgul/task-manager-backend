@@ -16,6 +16,9 @@ router.post('/crud', async (req: Request<{}, {}, IProjectRouterCrud>, res: Respo
         req.body.ProjectContract.ProjectId,
         req.body.ProjectContract.ProjectNo,
         req.body.ProjectContract.ProjectName,
+        req.body.ProjectContract.ProjectDescription,
+        req.body.ProjectContract.EndDate,
+        req.body.ProjectContract.ActualEndDate,
         req.body.ProjectContract.ProjectStatus
     );
     let projectManager = new ProjectManager(new SqLiteDatabase(), project);
@@ -24,25 +27,15 @@ router.post('/crud', async (req: Request<{}, {}, IProjectRouterCrud>, res: Respo
     });
 });
 
-interface IProjectListRequest {
-    projectStatus: string;
+interface IProjectListQuery {
+    ProjectStatus: ProjectStatus;
+    ProjectDescription: string;
 }
 
-router.get('/list/:projectStatus', async (req: Request<IProjectListRequest>, res: Response) => {
+router.get('/list', async (req: Request<{}, {}, {}, IProjectListQuery>, res: Response) => {
     let contract: ProjectContract = new ProjectContract();
-
-    contract.ProjectStatus = ProjectStatus.None;
-    switch (req.params.projectStatus) {
-        case '1':
-            contract.ProjectStatus = ProjectStatus.New;
-            break;
-        case '2':
-            contract.ProjectStatus = ProjectStatus.Started;
-            break;
-        case '3':
-            contract.ProjectStatus = ProjectStatus.Finished;
-            break;
-    }
+    contract.ProjectStatus = req.query.ProjectStatus ? req.query.ProjectStatus : ProjectStatus.None;
+    contract.ProjectDescription = req.query.ProjectDescription;
     let projectManager = new ProjectManager(new SqLiteDatabase(), contract);
     projectManager.getList().then((result: ApiListResponse<ProjectContract>) => {
         res.json(result);

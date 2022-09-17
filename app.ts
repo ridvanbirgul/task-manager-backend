@@ -57,12 +57,12 @@ let optionsOfLimiter: Partial<Options> = {
 let limiter = rateLimit(optionsOfLimiter);
 app.use(limiter);
 
-// app.use(bodyParser.json());
-// const log = createWriteStream(path.join(__dirname, 'log', 'express.log'), { flags: 'a' });
-// morganBody(app, {
-//     noColors: true,
-//     stream: log,
-// });
+app.use(bodyParser.json());
+const log = createWriteStream(path.join(__dirname, 'log', 'express.log'), { flags: 'a' });
+morganBody(app, {
+    noColors: true,
+    stream: log,
+});
 
 /*
 helmet default values for protection : 
@@ -109,8 +109,9 @@ app.use(function (err: any, req: any, res: Response, next: NextFunction) {
 function ignoreFavicon(req: Request, res: Response, next: NextFunction) {
     if (req.originalUrl.includes('favicon.ico')) {
         res.status(204).end();
+    } else {
+        next();
     }
-    next();
 }
 
 export default app;

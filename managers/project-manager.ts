@@ -18,11 +18,14 @@ class ProjectManager extends ManagerBase<ProjectContract> {
         };
         if (this.contract) {
             if (this.contract.ProjectId) {
-                let query = `UPDATE Project SET ProjectName=?,ProjectStatus=? WHERE ProjectId=?`;
+                let query = `UPDATE Project SET ProjectName=?,ProjectStatus=?,ProjectDescription=?,EndDate=?,ActualEndDate=? WHERE ProjectId=?`;
                 await dbm.Database.execute<RunResult>(query, [
                     this.contract.ProjectName,
                     this.contract.ProjectStatus,
                     this.contract.ProjectId,
+                    this.contract.ProjectDescription,
+                    this.contract.EndDate,
+                    this.contract.ActualEndDate,
                 ]).catch((err: Error) => {
                     res.Code = 100;
                     res.IsSuccess = false;
@@ -52,11 +55,15 @@ class ProjectManager extends ManagerBase<ProjectContract> {
             Message: '',
             Data: [],
         };
-        let query = `SELECT * FROM Project`;
+        let query = `SELECT * FROM Project WHERE 1=1 `;
         let paramater = [];
         if (this.contract.ProjectStatus !== ProjectStatus.None) {
-            query = `SELECT * FROM Project WHERE ProjectStatus=?`;
+            query += `AND ProjectStatus=? `;
             paramater.push(this.contract.ProjectStatus);
+        }
+        if (this.contract.ProjectDescription && this.contract.ProjectDescription !== '') {
+            query += `AND ProjectDescription LIKE ? `;
+            paramater.push('%' + this.contract.ProjectDescription + '%');
         }
         await dbm.Database.select<ProjectContract>(query, paramater)
             .then((result: Array<ProjectContract>) => {

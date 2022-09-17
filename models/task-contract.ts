@@ -20,10 +20,10 @@ class TaskContract implements IDataTable {
         teammateId: number = 0,
         taskDescription: string = '',
         taskStatus: TaskStatus = TaskStatus.None,
-        startDate: Date = DateUtils.getDefaultDate(),
-        endDate: Date = DateUtils.getDefaultDate(),
-        actualStartDate: Date = DateUtils.getDefaultDate(),
-        actualEndDate: Date = DateUtils.getDefaultDate()
+        startDate: Date = DateUtils.DefaultDate,
+        endDate: Date = DateUtils.DefaultDate,
+        actualStartDate: Date = DateUtils.DefaultDate,
+        actualEndDate: Date = DateUtils.DefaultDate
     ) {
         this.taskId = taskId;
         this.projectId = projectId;

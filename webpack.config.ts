@@ -32,6 +32,18 @@ module.exports = {
                 {
                     from: 'public/**/*',
                 },
+                {
+                    from: 'views/**/*',
+                },
+                {
+                    from: 'log/**',
+                },
+                {
+                    from: path.resolve(__dirname, 'package.json'),
+                },
+                {
+                    from: path.resolve(__dirname, '.env'),
+                },
             ],
         }),
     ],
