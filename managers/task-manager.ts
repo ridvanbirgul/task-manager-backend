@@ -54,7 +54,7 @@ class TaskManager extends ManagerBase<TaskContract> {
         let paramList: any[] = [];
         let query = 'SELECT * FROM Task WHERE 1=1';
         if (this.contract.ProjectId > 0) {
-            query += ' ProjectId=? ';
+            query += ' AND ProjectId=? ';
             paramList.push(this.contract.ProjectId);
         }
         if (this.contract.TeammateId > 0) {
@@ -68,7 +68,7 @@ class TaskManager extends ManagerBase<TaskContract> {
 
         query += ' LIMIT 100 ';
 
-       await this.dbm.Database.select<TaskContract>(query, paramList)
+        await this.dbm.Database.select<TaskContract>(query, paramList)
             .then((result: Array<TaskContract>) => {
                 res.Data.push(...result);
             })

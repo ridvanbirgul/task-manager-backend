@@ -107,4 +107,16 @@ class TaskContract implements IDataTable {
     }
 }
 
+export const TaskContractInitialize: TaskContract = new TaskContract(
+    0,
+    0,
+    0,
+    '',
+    TaskStatus.None,
+    new Date(),
+    new Date(),
+    DateUtils.DefaultDate,
+    DateUtils.DefaultDate
+);
+
 export { TaskContract };

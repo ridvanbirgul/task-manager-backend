@@ -1,16 +1,24 @@
 import express, { Request, Response } from 'express';
+import { cloneDeep } from 'lodash';
 import SqLiteDatabase from '../dao/sqlite-database';
 import TaskManager from '../managers/task-manager';
 import { ApiListResponse, ApiResponse } from '../models/api-model';
-import { TaskContract } from '../models/task-contract';
+import { TaskContract, TaskContractInitialize } from '../models/task-contract';
+import { TaskStatus } from '../models/task-status';
 
 const router = express.Router();
 
-interface ITaskRouterRequest {
+interface ITaskCrudRequest {
     Task: TaskContract;
 }
 
-router.post('/crud', async (req: Request<{}, {}, ITaskRouterRequest>, res: Response) => {
+interface ITaskListRequest {
+    ProjectId: number;
+    TeammateId: number;
+    TaskStatus: TaskStatus;
+}
+
+router.post('/crud', async (req: Request<{}, {}, ITaskCrudRequest>, res: Response) => {
     let task: TaskContract = new TaskContract(
         req.body.Task.TaskId,
         req.body.Task.ProjectId,
@@ -28,8 +36,13 @@ router.post('/crud', async (req: Request<{}, {}, ITaskRouterRequest>, res: Respo
     });
 });
 
-router.post('/list', (req: Request<{}, {}, ITaskRouterRequest>, res: Response) => {
-    let tm = new TaskManager(new SqLiteDatabase(), req.body.Task);
+router.get('/list', (req: Request<{}, {}, {}, ITaskListRequest>, res: Response) => {
+    let task = new TaskContract();
+    task.ProjectId = req.query.ProjectId || 0;
+    task.TeammateId = req.query.TeammateId || 0;
+    task.TaskStatus = req.query.TaskStatus || TaskStatus.None;
+
+    let tm = new TaskManager(new SqLiteDatabase(), task);
     tm.getList().then((result: ApiListResponse<TaskContract>) => {
         res.json(result);
     });
