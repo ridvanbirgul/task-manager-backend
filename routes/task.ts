@@ -1,9 +1,8 @@
 import express, { Request, Response } from 'express';
-import { cloneDeep } from 'lodash';
 import SqLiteDatabase from '../dao/sqlite-database';
 import TaskManager from '../managers/task-manager';
 import { ApiListResponse, ApiResponse } from '../models/api-model';
-import { TaskContract, TaskContractInitialize } from '../models/task-contract';
+import { TaskContract } from '../models/task-contract';
 import { TaskStatus } from '../models/task-status';
 
 const router = express.Router();

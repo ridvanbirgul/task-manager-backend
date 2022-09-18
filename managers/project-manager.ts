@@ -1,4 +1,4 @@
-import { cloneDeep } from 'lodash';
+import { cloneDeep, isEmpty } from 'lodash';
 import { RunResult } from 'sqlite3';
 import SqLiteDatabase from '../dao/sqlite-database';
 import { ApiListResponse, ApiResponse } from '../models/api-model';
@@ -61,7 +61,7 @@ class ProjectManager extends ManagerBase<ProjectContract> {
             query += `AND ProjectStatus=? `;
             paramater.push(this.contract.ProjectStatus);
         }
-        if (this.contract.ProjectDescription && this.contract.ProjectDescription !== '') {
+        if (this.contract.ProjectDescription && !isEmpty(this.contract.ProjectDescription)) {
             query += `AND ProjectDescription LIKE ? `;
             paramater.push('%' + this.contract.ProjectDescription + '%');
         }
