@@ -1,6 +1,8 @@
 import { ProjectStatus } from './project-status';
 import { IDataTable } from '../dao/table-base';
 import DateUtils from '../util/date-utils';
+import { IDatabase } from '../dao/dao-base';
+import SqLiteDatabase from '../dao/sqlite-database';
 
 class ProjectContract implements IDataTable {
     private projectId: number;
@@ -84,19 +86,33 @@ class ProjectContract implements IDataTable {
         this.projectStatus = projectStatus;
     }
 
-    generateInsertStatement(): string {
-        return `INSERT INTO Project(ProjectNo,ProjectName,ProjectDescription,EndDate,ActualEndDate,ProjectStatus) VALUES(?,?,?,?,?,?)`;
+    generateInsertStatement(db: IDatabase): string {
+        if (db instanceof SqLiteDatabase) {
+            return `INSERT INTO Project(ProjectNo,ProjectName,ProjectDescription,EndDate,ActualEndDate,ProjectStatus) VALUES(?,?,?,?,?,?)`;
+        } else {
+            return `INSERT INTO Project(ProjectNo,ProjectName,ProjectDescription,EndDate,ActualEndDate,ProjectStatus) VALUES(@projectNo,@projectName,@projectDescription,@endDate,@actualEndDate,@projectStatus)`;
+        }
     }
-
-    getColumns(): any[] {
-        return [
-            this.ProjectNo,
-            this.ProjectName,
-            this.ProjectDescription,
-            this.EndDate,
-            this.ActualEndDate,
-            this.ProjectStatus,
-        ];
+    getColumns(db: IDatabase): any[] {
+        if (db instanceof SqLiteDatabase) {
+            return [
+                this.ProjectNo,
+                this.ProjectName,
+                this.ProjectDescription,
+                this.EndDate,
+                this.ActualEndDate,
+                this.ProjectStatus,
+            ];
+        } else {
+            return [
+                { key: 'projectNo', value: this.projectNo },
+                { key: 'projectName', value: this.projectName },
+                { key: 'projectDescription', value: this.projectDescription },
+                { key: 'endDate', value: this.endDate },
+                { key: 'actualEndDate', value: this.actualEndDate },
+                { key: 'projectStatus', value: this.projectStatus },
+            ];
+        }
     }
 }
 

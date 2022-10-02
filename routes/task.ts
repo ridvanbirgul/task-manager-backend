@@ -22,6 +22,7 @@ router.post('/crud', async (req: Request<{}, {}, ITaskCrudRequest>, res: Respons
         req.body.Task.TaskId,
         req.body.Task.ProjectId,
         req.body.Task.TeammateId,
+        req.body.Task.TaskName,
         req.body.Task.TaskDescription,
         req.body.Task.TaskStatus,
         req.body.Task.StartDate,

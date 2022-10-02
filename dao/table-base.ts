@@ -1,6 +1,8 @@
+import { IDatabase } from './dao-base';
+
 interface IDataTable {
-    generateInsertStatement(): string;
-    getColumns(): Array<any>;
+    generateInsertStatement(db: IDatabase): string;
+    getColumns(db: IDatabase): Array<any>;
 }
 
 export { IDataTable };

@@ -2,11 +2,14 @@ import { IDataTable } from '../dao/table-base';
 import { TaskStatus } from './task-status';
 import '../util/date-utils';
 import DateUtils from '../util/date-utils';
+import { IDatabase } from '../dao/dao-base';
+import SqLiteDatabase from '../dao/sqlite-database';
 
 class TaskContract implements IDataTable {
     private taskId: number;
     private projectId: number;
     private teammateId: number;
+    private taskName: string;
     private taskDescription: string;
     private taskStatus: TaskStatus;
     private startDate: Date;
@@ -18,6 +21,7 @@ class TaskContract implements IDataTable {
         taskId: number = 0,
         projectId: number = 0,
         teammateId: number = 0,
+        taskName: string = '',
         taskDescription: string = '',
         taskStatus: TaskStatus = TaskStatus.None,
         startDate: Date = DateUtils.DefaultDate,
@@ -28,6 +32,7 @@ class TaskContract implements IDataTable {
         this.taskId = taskId;
         this.projectId = projectId;
         this.teammateId = teammateId;
+        this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.taskStatus = taskStatus;
         this.startDate = startDate;
@@ -53,6 +58,12 @@ class TaskContract implements IDataTable {
     }
     set TeammateId(_teammateId: number) {
         this.teammateId = _teammateId;
+    }
+    get TaskName(): string {
+        return this.taskName;
+    }
+    set TaskName(_taskName: string) {
+        this.taskName = _taskName;
     }
     get TaskDescription(): string {
         return this.taskDescription;
@@ -90,20 +101,40 @@ class TaskContract implements IDataTable {
     set ActualEndDate(_actualEndDate: Date) {
         this.actualEndDate = _actualEndDate;
     }
-    generateInsertStatement(): string {
-        return `INSERT INTO Task(ProjectId,TeammateId,TaskDescription,TaskStatus,StartDate,EndDate,ActualStartDate,ActualEndDate) VALUES(?,?,?,?,?,?,?,?)`;
+
+    generateInsertStatement(db: IDatabase): string {
+        if (db instanceof SqLiteDatabase) {
+            return `INSERT INTO Task(ProjectId,TeammateId,TaskName,TaskDescription,TaskStatus,StartDate,EndDate,ActualStartDate,ActualEndDate) VALUES(?,?,?,?,?,?,?,?,?)`;
+        } else {
+            return `INSERT INTO Task(ProjectId,TeammateId,TaskName,TaskDescription,TaskStatus,StartDate,EndDate,ActualStartDate,ActualEndDate) VALUES(@projectId,@teammateId,@taskName,@taskDescription,@taskStatus,@startDate,@endDate,@actualStartDate,@actualEndDate)`;
+        }
     }
-    getColumns(): any[] {
-        return [
-            this.projectId,
-            this.teammateId,
-            this.taskDescription,
-            this.taskStatus,
-            DateUtils.toYYYYMMDDString(this.startDate),
-            DateUtils.toYYYYMMDDString(this.endDate),
-            DateUtils.toYYYYMMDDString(this.actualStartDate),
-            DateUtils.toYYYYMMDDString(this.actualEndDate),
-        ];
+    getColumns(db: IDatabase): any[] {
+        if (db instanceof SqLiteDatabase) {
+            return [
+                this.projectId,
+                this.teammateId,
+                this.TaskName,
+                this.taskDescription,
+                this.taskStatus,
+                DateUtils.toYYYYMMDDString(this.startDate),
+                DateUtils.toYYYYMMDDString(this.endDate),
+                DateUtils.toYYYYMMDDString(this.actualStartDate),
+                DateUtils.toYYYYMMDDString(this.actualEndDate),
+            ];
+        } else {
+            return [
+                { key: 'projectId', value: this.projectId },
+                { key: 'teammateId', value: this.teammateId },
+                { key: 'taskName', value: this.taskName },
+                { key: 'taskDescription', value: this.taskDescription },
+                { key: 'taskStatus', value: this.taskStatus },
+                { key: 'startDate', value: DateUtils.toYYYYMMDDString(this.startDate) },
+                { key: 'endDate', value: DateUtils.toYYYYMMDDString(this.endDate) },
+                { key: 'actualStartDate', value: DateUtils.toYYYYMMDDString(this.actualStartDate) },
+                { key: 'actualEndDate', value: DateUtils.toYYYYMMDDString(this.actualEndDate) },
+            ];
+        }
     }
 }
 
@@ -111,6 +142,7 @@ export const TaskContractInitialize: TaskContract = new TaskContract(
     0,
     0,
     0,
+    '',
     '',
     TaskStatus.None,
     new Date(),

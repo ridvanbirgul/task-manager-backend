@@ -1,3 +1,5 @@
+import { IDatabase } from '../dao/dao-base';
+import SqLiteDatabase from '../dao/sqlite-database';
 import { IDataTable } from '../dao/table-base';
 import { RecordStatus } from './record-status';
 import { TeammateRole } from './teammate-role';
@@ -51,11 +53,23 @@ class TeammateContract implements IDataTable {
         this.teammateStatus = teammateStatus;
     }
 
-    generateInsertStatement(): string {
-        return `INSERT INTO Teammate(TeammateName,TeammateRole,TeammateStatus) VALUES(?,?,?)`;
+    generateInsertStatement(db: IDatabase): string {
+        if (db instanceof SqLiteDatabase) {
+            return `INSERT INTO Teammate(TeammateName,TeammateRole,TeammateStatus) VALUES(?,?,?)`;
+        } else {
+            return `INSERT INTO Teammate(TeammateName,TeammateRole,TeammateStatus) VALUES(@teammateName,@teammateRole,@teammateStatus)`;
+        }
     }
-    getColumns(): any[] {
-        return [this.teammateName, this.teammateRole, this.teammateStatus];
+    getColumns(db: IDatabase): any[] {
+        if (db instanceof SqLiteDatabase) {
+            return [this.teammateName, this.teammateRole, this.teammateStatus];
+        } else {
+            return [
+                { key: 'teammateName', value: this.teammateName },
+                { key: 'teammateRole', value: this.teammateRole },
+                { key: 'teammateStatus', value: this.teammateStatus },
+            ];
+        }
     }
 }
 

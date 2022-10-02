@@ -24,7 +24,7 @@ class SqLiteDatabase implements IDatabase {
 
     insert<RunResult>(data: IDataTable): Promise<RunResult> {
         return new Promise((resolve, reject) => {
-            this.database.run(data.generateInsertStatement(), data.getColumns(), function (err: Error) {
+            this.database.run(data.generateInsertStatement(this), data.getColumns(this), function (err: Error) {
                 if (err) {
                     reject(err);
                 } else {

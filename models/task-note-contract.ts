@@ -1,3 +1,5 @@
+import { IDatabase } from '../dao/dao-base';
+import SqLiteDatabase from '../dao/sqlite-database';
 import { IDataTable } from '../dao/table-base';
 
 class TaskNoteContract implements IDataTable {
@@ -27,11 +29,22 @@ class TaskNoteContract implements IDataTable {
         this.taskDescription = _taskDescription;
     }
 
-    generateInsertStatement(): string {
-        return `INSERT INTO TaskNote(TaskId,TaskDescription) VALUES(?,?)`;
+    generateInsertStatement(db: IDatabase): string {
+        if (db instanceof SqLiteDatabase) {
+            return `INSERT INTO TaskNote(TaskId,TaskDescription) VALUES(?,?)`;
+        } else {
+            return `INSERT INTO TaskNote(TaskId,TaskDescription) VALUES(@taskId,@taskDescription)`;
+        }
     }
-    getColumns(): any[] {
-        return [this.taskId, this.taskDescription];
+    getColumns(db: IDatabase): any[] {
+        if (db instanceof SqLiteDatabase) {
+            return [this.taskId, this.taskDescription];
+        } else {
+            return [
+                { key: 'taskId', value: this.taskId },
+                { key: 'taskDescription', value: this.taskDescription },
+            ];
+        }
     }
 }
 
